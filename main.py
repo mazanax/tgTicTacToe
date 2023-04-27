@@ -40,33 +40,17 @@ def _get_or_create_user(telegram_id) -> dict:
 
 def _find_winner(field: list) -> str:
     for column in range(5):
-        if field[0 + column] == field[5 + column] == field[10 + column] and field[0 + column] != "":
+        if (field[0 + column] == field[5 + column] == field[10 + column] == field[15 + column] == field[20 + column]
+                and field[0 + column] != ""):
             return field[0 + column]
-        if field[5 + column] == field[10 + column] == field[15 + column] and field[5 + column] != "":
-            return field[5 + column]
-        if field[10 + column] == field[15 + column] == field[20 + column] and field[10 + column] != "":
-            return field[10 + column]
     for row in range(5):
-        if field[5 * row] == field[5 * row + 1] == field[5 * row + 2] and field[5 * row] != "":
+        if (field[5 * row] == field[5 * row + 1] == field[5 * row + 2] == field[5 * row + 3] == field[5 * row + 4]
+                and field[5 * row] != ""):
             return field[5 * row]
-        if field[5 * row + 1] == field[5 * row + 2] == field[5 * row + 3] and field[5 * row + 1] != "":
-            return field[5 * row + 1]
-        if field[5 * row + 2] == field[5 * row + 3] == field[5 * row + 4] and field[5 * row + 2] != "":
-            return field[5 * row + 2]
-    for offset in range(3):
-        if field[offset] == field[6 + offset] == field[12 + offset] and field[offset] != "":
-            return field[offset]
-        if field[5 + offset] == field[11 + offset] == field[17 + offset] and field[5 + offset] != "":
-            return field[5 + offset]
-        if field[10 + offset] == field[16 + offset] == field[22 + offset] and field[10 + offset] != "":
-            return field[10 + offset]
-    for offset in range(3):
-        if field[2 + offset] == field[6 + offset] == field[10 + offset] and field[2 + offset] != "":
-            return field[2 + offset]
-        if field[7 + offset] == field[11 + offset] == field[15 + offset] and field[7 + offset] != "":
-            return field[7 + offset]
-        if field[12 + offset] == field[16 + offset] == field[20 + offset] and field[12 + offset] != "":
-            return field[12 + offset]
+    if field[0] == field[6] == field[12] == field[18] == field[24] and field[0] != "":
+        return field[0]
+    if field[4] == field[8] == field[12] == field[16] == field[20] and field[4] != "":
+        return field[4]
 
     return ""
 
