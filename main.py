@@ -40,19 +40,48 @@ def _get_or_create_user(telegram_id) -> dict:
 
 def _find_winner(field: list) -> str:
     for column in range(5):
-        if (field[0 + column] == field[5 + column] == field[10 + column] == field[15 + column] == field[20 + column]
+        if (field[0 + column] == field[5 + column] == field[10 + column] == field[15 + column]
                 and field[0 + column] != ""):
             return field[0 + column]
+        if (field[5 + column] == field[10 + column] == field[15 + column] == field[20 + column]
+                and field[5 + column] != ""):
+            return field[5 + column]
     for row in range(5):
-        if (field[5 * row] == field[5 * row + 1] == field[5 * row + 2] == field[5 * row + 3] == field[5 * row + 4]
+        if (field[5 * row] == field[5 * row + 1] == field[5 * row + 2] == field[5 * row + 3]
                 and field[5 * row] != ""):
             return field[5 * row]
-    if field[0] == field[6] == field[12] == field[18] == field[24] and field[0] != "":
-        return field[0]
-    if field[4] == field[8] == field[12] == field[16] == field[20] and field[4] != "":
-        return field[4]
+        if (field[5 * row + 1] == field[5 * row + 2] == field[5 * row + 3] == field[5 * row + 4]
+                and field[5 * row + 1] != ""):
+            return field[5 * row + 1]
+    for offset in range(2):
+        if field[0 + offset] == field[6 + offset] == field[12 + offset] == field[18 + offset] and field[0 + offset] != "":
+            return field[0 + offset]
+    for offset in range(2):
+        if field[3 + offset] == field[7 + offset] == field[11 + offset] == field[15 + offset] and field[3 + offset] != "":
+            return field[3 + offset]
 
     return ""
+
+
+def _is_draw(field: list) -> bool:
+    for column in range(5):
+        if "" in (field[0 + column], field[5 + column], field[10 + column], field[15 + column]):
+            return False
+        if "" in (field[5 + column], field[10 + column], field[15 + column], field[20 + column]):
+            return False
+    for row in range(5):
+        if "" in (field[5 * row], field[5 * row + 1], field[5 * row + 2], field[5 * row + 3]):
+            return False
+        if "" in (field[5 * row + 1], field[5 * row + 2], field[5 * row + 3], field[5 * row + 4]):
+            return False
+    for offset in range(2):
+        if "" in (field[0 + offset], field[6 + offset], field[12 + offset], field[18 + offset]):
+            return False
+    for offset in range(2):
+        if "" in (field[3 + offset], field[7 + offset], field[11 + offset], field[15 + offset]):
+            return False
+
+    return True
 
 
 def _get_cell(field: list, cell_id: int) -> str:
@@ -171,7 +200,7 @@ def handle_turn(call: CallbackQuery) -> None:
     new_turn = game.get("second_player") if game.get("first_player") == user.get("telegram_id") else game.get(
         "first_player")
 
-    if "" not in field or _find_winner(field) != "":
+    if "" not in field or _find_winner(field) != "" or _is_draw(field):
         winner = _find_winner(field)
         if winner == "X":
             state = "winner_first"
