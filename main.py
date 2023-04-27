@@ -54,10 +54,12 @@ def _find_winner(field: list) -> str:
                 and field[5 * row + 1] != ""):
             return field[5 * row + 1]
     for offset in range(2):
-        if field[0 + offset] == field[6 + offset] == field[12 + offset] == field[18 + offset] and field[0 + offset] != "":
+        if (field[0 + offset] == field[6 + offset] == field[12 + offset] == field[18 + offset]
+                and field[0 + offset] != ""):
             return field[0 + offset]
     for offset in range(2):
-        if field[3 + offset] == field[7 + offset] == field[11 + offset] == field[15 + offset] and field[3 + offset] != "":
+        if (field[3 + offset] == field[7 + offset] == field[11 + offset] == field[15 + offset]
+                and field[3 + offset] != ""):
             return field[3 + offset]
 
     return ""
@@ -65,20 +67,26 @@ def _find_winner(field: list) -> str:
 
 def _is_draw(field: list) -> bool:
     for column in range(5):
-        if "" in (field[0 + column], field[5 + column], field[10 + column], field[15 + column]):
+        if not ([field[0 + column], field[5 + column], field[10 + column], field[15 + column]].count("X") >= 2
+                and [field[0 + column], field[5 + column], field[10 + column], field[15 + column]].count("O") >= 2):
             return False
-        if "" in (field[5 + column], field[10 + column], field[15 + column], field[20 + column]):
+        if not ([field[5 + column], field[10 + column], field[15 + column], field[20 + column]].count("X") >= 2
+                and [field[5 + column], field[10 + column], field[15 + column], field[20 + column]].count("O") >= 2):
             return False
     for row in range(5):
-        if "" in (field[5 * row], field[5 * row + 1], field[5 * row + 2], field[5 * row + 3]):
+        if not ([field[5 * row], field[5 * row + 1], field[5 * row + 2], field[5 * row + 3]].count("X") >= 2
+                and [field[5 * row], field[5 * row + 1], field[5 * row + 2], field[5 * row + 3]].count("O") >= 2):
             return False
-        if "" in (field[5 * row + 1], field[5 * row + 2], field[5 * row + 3], field[5 * row + 4]):
+        if not ([field[5 * row + 1], field[5 * row + 2], field[5 * row + 3], field[5 * row + 4]].count("X") >= 2
+                and [field[5 * row + 1], field[5 * row + 2], field[5 * row + 3], field[5 * row + 4]].count("O") >= 2):
             return False
     for offset in range(2):
-        if "" in (field[0 + offset], field[6 + offset], field[12 + offset], field[18 + offset]):
+        if not ([field[0 + offset], field[6 + offset], field[12 + offset], field[18 + offset]].count("X") >= 2
+                and [field[0 + offset], field[6 + offset], field[12 + offset], field[18 + offset]].count("O") >= 2):
             return False
     for offset in range(2):
-        if "" in (field[3 + offset], field[7 + offset], field[11 + offset], field[15 + offset]):
+        if not ([field[3 + offset], field[7 + offset], field[11 + offset], field[15 + offset]].count("X") >= 2
+                and [field[3 + offset], field[7 + offset], field[11 + offset], field[15 + offset]].count("O") >= 2):
             return False
 
     return True

@@ -8,7 +8,7 @@ def WELCOME_BACK_MESSAGE(balance: int) -> str:
 
 
 def INVITE(username: str, bet: int) -> str:
-    return f'User <b>{username}</b> invites you to play XO.\n\nBet: <b>{bet}</b> coins.'
+    return f'User <b>{username}</b> invites you to play XO.\n\n4-in-row to win\n\nBet: <b>{bet}</b> coins.'
 
 
 def BET_PREVIEW(bet: int) -> str:
