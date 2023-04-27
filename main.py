@@ -39,16 +39,34 @@ def _get_or_create_user(telegram_id) -> dict:
 
 
 def _find_winner(field: list) -> str:
-    for column in range(3):
-        if field[0 + column] == field[3 + column] == field[6 + column] and field[0 + column] != "":
+    for column in range(5):
+        if field[0 + column] == field[5 + column] == field[10 + column] and field[0 + column] != "":
             return field[0 + column]
-    for row in range(3):
-        if field[3 * row] == field[3 * row + 1] == field[3 * row + 2] and field[3 * row] != "":
-            return field[0]
-    if field[0] == field[4] == field[8] and field[0] != "":
-        return field[0]
-    if field[2] == field[4] == field[6] and field[2] != "":
-        return field[2]
+        if field[5 + column] == field[10 + column] == field[15 + column] and field[5 + column] != "":
+            return field[5 + column]
+        if field[10 + column] == field[15 + column] == field[20 + column] and field[10 + column] != "":
+            return field[10 + column]
+    for row in range(5):
+        if field[5 * row] == field[5 * row + 1] == field[5 * row + 2] and field[5 * row] != "":
+            return field[5 * row]
+        if field[5 * row + 1] == field[5 * row + 2] == field[5 * row + 3] and field[5 * row + 1] != "":
+            return field[5 * row + 1]
+        if field[5 * row + 2] == field[5 * row + 3] == field[5 * row + 4] and field[5 * row + 2] != "":
+            return field[5 * row + 2]
+    for offset in range(3):
+        if field[offset] == field[6 + offset] == field[12 + offset] and field[offset] != "":
+            return field[offset]
+        if field[5 + offset] == field[11 + offset] == field[17 + offset] and field[5 + offset] != "":
+            return field[5 + offset]
+        if field[10 + offset] == field[16 + offset] == field[22 + offset] and field[10 + offset] != "":
+            return field[10 + offset]
+    for offset in range(3):
+        if field[2 + offset] == field[6 + offset] == field[10 + offset] and field[2 + offset] != "":
+            return field[2 + offset]
+        if field[7 + offset] == field[11 + offset] == field[15 + offset] and field[7 + offset] != "":
+            return field[7 + offset]
+        if field[12 + offset] == field[16 + offset] == field[20 + offset] and field[12 + offset] != "":
+            return field[12 + offset]
 
     return ""
 
@@ -59,13 +77,13 @@ def _get_cell(field: list, cell_id: int) -> str:
 
 def _get_keyboard(field=None, game_id=None, show_surround=True) -> list:
     buttons = []
-    for i in range(9):
+    for i in range(25):
         cell_text = _get_cell(field, i) if field is not None else CELL_EMPTY
         cell_data = f"turn_{game_id}_{i}" if game_id is not None else 'empty_data'
         buttons.append(InlineKeyboardButton(cell_text, callback_data=cell_data))
 
     # Group buttons by 3 [[x, x, x], [x, x, x], [x, x, x]]. Won't work if len(buttons) % 3 != 0
-    result = list(zip(*[buttons[i::3] for i in range(3)]))
+    result = list(zip(*[buttons[i::5] for i in range(5)]))
     if show_surround:
         result.append([
             InlineKeyboardButton("Surround", callback_data=f"surround_{game_id}")
@@ -138,7 +156,7 @@ def handle_surround(call: CallbackQuery) -> None:
 @bot.callback_query_handler(func=lambda call: call.data.startswith('turn_'))
 def handle_turn(call: CallbackQuery) -> None:
     game_id, cell = call.data.replace("turn_", "").split("_")
-    if int(cell) < 0 or int(cell) > 8:
+    if int(cell) < 0 or int(cell) > 24:
         bot.answer_callback_query(call.id, messages.CELL_NOT_FOUND(cell), show_alert=True, cache_time=0)
         return
 
@@ -158,7 +176,7 @@ def handle_turn(call: CallbackQuery) -> None:
 
     field = game.get("field", [])
     if not field:
-        field = ["", "", "", "", "", "", "", "", ""]
+        field = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
 
     if field[int(cell)] != "":
         bot.answer_callback_query(call.id, messages.CELL_CHANGED, show_alert=True, cache_time=0)
